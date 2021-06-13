@@ -43,3 +43,6 @@ hs_err_pid*
 
 ### Other files
 *.txt
+.idea/vcs.xml
+src/main/resources/
+src/test/
