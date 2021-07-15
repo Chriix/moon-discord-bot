@@ -42,7 +42,7 @@ gradle-app.setting
 hs_err_pid*
 
 ### Other files
-*.txt
+project.txt
 .idea/vcs.xml
 src/main/resources/
 src/test/

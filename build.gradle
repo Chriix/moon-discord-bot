@@ -3,7 +3,7 @@ plugins {
     id'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
-mainClassName = 'dev.chrix.xova.Xova'
+mainClassName = 'dev.chrix.moon.Moon'
 
 version '1.0'
 def jdaVersion = '4.3.0_277'
@@ -15,10 +15,16 @@ repositories {
     maven { // on kotlin dsl use `maven("https://m2.dv8tion.net/releases")` instead
         url "https://m2.dv8tion.net/releases"
     }
+    google()
+    google {
+        url "https://github.com/google/re2j/releases"
+    }
 }
 
 dependencies {
     implementation("net.dv8tion:JDA:$jdaVersion")
+    implementation 'org.jetbrains:annotations:19.0.0'
+    implementation("com.google.re2j:re2j:1.6")
 }
 
 compileJava.options.encoding = 'UTF-8'
