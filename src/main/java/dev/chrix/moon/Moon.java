@@ -1,4 +1,4 @@
-package dev.chrix.xova;
+package dev.chrix.moon;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -11,20 +11,32 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
+import javax.security.auth.login.LoginException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Objects;
 
-public class Xova extends ListenerAdapter {
+/**
+ *
+ */
+public class Moon extends ListenerAdapter {
 
-    private String botPrefix = "+";
+    public static String Prefix = "+";
+    private static final String[] COMMANDS = new String[]{"help", "ping", "prefix", "nick", "automod"};
+    private static AutoMod autoMod;
+    private static Moon moon;
+
+    public Moon() throws IOException {
+        autoMod = new AutoMod();
+    }
 
     public static void main(String[] args) throws Exception {
-
+        moon = new Moon();
         JDA api = JDABuilder.createLight(Secret.BOT_TOKEN, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
-                .addEventListeners(new Xova())
-                .setActivity(Activity.playing("Chrix suffering!"))
+                .addEventListeners(moon)
+                .setActivity(Activity.playing("with Chrix!"))
                 .build();
-
-        api.upsertCommand("ping", "Calculates the ping of Xova").queue();
+        api.upsertCommand("ping", "Calculates the ping of Xova.").queue();
     }
 
     @Override
@@ -32,7 +44,11 @@ public class Xova extends ListenerAdapter {
         Message msg = event.getMessage();
         MessageChannel channel = event.getChannel();
         // Checks for message sender and bot prefix
-        if (event.getAuthor().isBot() || !msg.getContentRaw().startsWith(botPrefix)) return;
+        if (event.getAuthor().isBot()) return;
+        if (!msg.getContentRaw().startsWith(Prefix)) {
+            autoMod.handleMessage(event);
+            return;
+        }
         switch (msg.getContentRaw().substring(1).toLowerCase().split(" ")[0]) {
             case "ping":
                 Ping.handleEvent(event);
@@ -40,19 +56,29 @@ public class Xova extends ListenerAdapter {
             case "prefix":
                 changePrefix(event);
                 break;
+            case "nick":
+                Nickname.handleEvent(event);
+                break;
+            case "automod":
+                autoMod.handleEvent(event);
+                break;
             default:
+                autoMod.handleMessage(event);
                 channel.sendMessage("That command does not exist. Please see `+help` for a list of commands.").queue();
         }
     }
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-        if (!event.getName().equals("ping")) return; // make sure we handle the right command
-        long time = System.currentTimeMillis();
-        event.reply("Pong!").setEphemeral(true) // reply or acknowledge
-                .flatMap(v ->
-                        event.getHook().editOriginalFormat("Pong: %d ms", System.currentTimeMillis() - time) // then edit original
-                ).queue(); // Queue both reply and edit
+        MessageChannel channel = event.getChannel();
+        switch (event.getName().toLowerCase().split(" ")[0]) {
+            case "ping":
+                Ping.handleSlash(event);
+                break;
+            case "nick":
+                //Nickname.handleSlash(event);
+                break;
+        }
     }
 
     private void changePrefix(MessageReceivedEvent event) {
@@ -64,7 +90,7 @@ public class Xova extends ListenerAdapter {
                 if (newPrefix.length() != 1) {
                     channel.sendMessage("Prefix must be exactly 1 character.\nFor example: `+prefix !`").queue();
                 } else {
-                    botPrefix = newPrefix;
+                    Prefix = newPrefix;
                     channel.sendMessage("Prefix has been successfully updated!").queue();
                 }
             } catch (StringIndexOutOfBoundsException e) {
