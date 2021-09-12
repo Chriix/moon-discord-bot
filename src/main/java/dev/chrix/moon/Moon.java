@@ -53,10 +53,12 @@ public class Moon extends ListenerAdapter {
         MessageChannel channel = event.getChannel();
         // Checks for message sender and bot prefix
         if (event.getAuthor().isBot()) return;
+        // Checks message based on AutoMod filters
         if (!msg.getContentRaw().startsWith(Prefix)) {
             autoMod.handleMessage(event);
             return;
         }
+        // Handles command calls
         switch (msg.getContentRaw().substring(1).toLowerCase().split(" ")[0]) {
             case "ping":
                 Ping.handleEvent(event);

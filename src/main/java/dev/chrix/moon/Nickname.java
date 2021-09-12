@@ -10,6 +10,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Nickname {
 
+    /**
+     * Message command for "+nick", changes nick based on requested params
+     *
+     * @param event Received event
+     */
     public static void handleEvent(MessageReceivedEvent event) {
         // Require kick permissions to call command
         if (Objects.requireNonNull(event.getMember()).hasPermission(Permission.KICK_MEMBERS)) {

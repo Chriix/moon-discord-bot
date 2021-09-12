@@ -24,10 +24,15 @@ public class AutoMod extends EventListener {
 
         String str;
         while ((str = scan.readLine()) != null) {
-            filters.add(Pattern.compile(str));
+            // Adds filters to list to be stored for checking
+            filters.add(Pattern.compile(str, Pattern.CASE_INSENSITIVE));
         }
     }
-
+    /**
+     * Message command for "+AutoMod", enables/disables automod
+     *
+     * @param event Received event
+     */
     public void handleEvent(MessageReceivedEvent event) {
         if (Objects.requireNonNull(event.getMember()).hasPermission(Permission.ADMINISTRATOR)) {
             Message message = event.getMessage();
@@ -49,6 +54,10 @@ public class AutoMod extends EventListener {
         }
     }
 
+    /**
+     * Checks filter list for detection and deletes message if found true
+     * @param event Received message
+     */
     public void handleMessage(MessageReceivedEvent event) {
         if (commandToggle) {
             Message message = event.getMessage();
