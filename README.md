@@ -2,7 +2,7 @@
 [![GitHub license](https://img.shields.io/github/license/jagrosh/Vortex.svg)](https://github.com/Chriix/moon-discord-bot/blob/master/LICENSE)
 [![Version](https://img.shields.io/github/v/tag/Chriix/moon-discord-bot?label=version)](https://github.com/Chriix/moon-discord-bot/releases/)
 
-Auto Moderation bot based on RE2 RegEx able to filter messages without user-moderation action.
+Discord Auto Moderation bot based on RE2 RegEx able to filter messages without user-moderation action.
 
 ## Self Deployment
 Down the road once I believe this bot is ready for public deployment, I will add Docker deployment.
