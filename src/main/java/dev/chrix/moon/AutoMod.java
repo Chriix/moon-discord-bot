@@ -24,8 +24,7 @@ public class AutoMod extends EventListener {
 
         String str;
         while ((str = scan.readLine()) != null) {
-            str = Pattern.quote(str);
-            filters.add(Pattern.compile(str, Pattern.CASE_INSENSITIVE));
+            filters.add(Pattern.compile(str));
         }
     }
 
@@ -33,7 +32,7 @@ public class AutoMod extends EventListener {
         if (Objects.requireNonNull(event.getMember()).hasPermission(Permission.ADMINISTRATOR)) {
             Message message = event.getMessage();
             MessageChannel channel = event.getChannel();
-            if (message.getContentRaw().toLowerCase().startsWith(Moon.Prefix + "automod")) {
+            if (message.getContentRaw().toLowerCase().startsWith(Moon.getPrefix() + "automod")) {
                 switch (message.getContentRaw().substring(8).replaceAll(" ", "").toLowerCase()) {
                     case "on":
                         commandToggle = true;
@@ -53,14 +52,12 @@ public class AutoMod extends EventListener {
     public void handleMessage(MessageReceivedEvent event) {
         if (commandToggle) {
             Message message = event.getMessage();
-            System.out.println("start");
+
             for (Pattern pattern : filters) {
-                System.out.println(pattern.matcher(message.getContentRaw().toLowerCase()).find());
                 if (pattern.matcher(message.getContentRaw()).find()) {
                     event.getMessage().delete().queue();
                 }
             }
-            System.out.println("end");
         }
     }
 }
