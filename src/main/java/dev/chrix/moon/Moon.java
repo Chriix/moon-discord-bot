@@ -11,21 +11,29 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
-import javax.security.auth.login.LoginException;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Objects;
 
 /**
+ *  Discord bot capable of automatically moderating user messages and other inputted commands
  *
+ * @author Chriix
  */
 public class Moon extends ListenerAdapter {
 
-    public static String Prefix = "+";
+    private static String Prefix = "+";
+
+    /**
+     * Currently available commands, used for help command
+     */
     private static final String[] COMMANDS = new String[]{"help", "ping", "prefix", "nick", "automod"};
     private static AutoMod autoMod;
     private static Moon moon;
 
+    /**
+     * Creates a new Moon (bot) object and initializes the auto moderator
+     * @throws IOException
+     */
     public Moon() throws IOException {
         autoMod = new AutoMod();
     }
@@ -81,6 +89,10 @@ public class Moon extends ListenerAdapter {
         }
     }
 
+    /**
+     * Internal command to change the public prefix of bot
+     * @param event Received event
+     */
     private void changePrefix(MessageReceivedEvent event) {
         Message msg = event.getMessage();
         MessageChannel channel = event.getChannel();
@@ -98,6 +110,14 @@ public class Moon extends ListenerAdapter {
                 //e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Returns bot's currently assigned prefix
+     * @return Moon.Prefix
+     */
+    public static String getPrefix() {
+        return Prefix;
     }
 }
 
